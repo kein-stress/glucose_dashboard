@@ -1,0 +1,21 @@
+# Install as a systemd --user unit (no root/sudo required):
+#   mkdir -p ~/.config/systemd/user
+#   cp deploy/glucose-dashboard.service ~/.config/systemd/user/
+#   loginctl enable-linger "$USER"   # keeps it running after logout/reboot
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now glucose-dashboard
+# Adjust WorkingDirectory/EnvironmentFile/ExecStart paths below for the target machine.
+
+[Unit]
+Description=Glucose Workout Dashboard
+
+[Service]
+Type=simple
+WorkingDirectory=/home/deploy/glucose_dashboard
+EnvironmentFile=/home/deploy/glucose_dashboard/.env
+ExecStart=/usr/bin/node server/index.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
