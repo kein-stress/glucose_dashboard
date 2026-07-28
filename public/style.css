@@ -1,0 +1,145 @@
+:root {
+  color-scheme: light dark;
+  --border: #d0d4da;
+  --bg-panel: #f7f8fa;
+  --accent: #3568d4;
+  --danger: #c0392b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --border: #3a3f47;
+    --bg-panel: #1c1f24;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  color: inherit;
+}
+
+header {
+  margin-bottom: 1.5rem;
+}
+
+.subtitle {
+  color: #8a8f98;
+  font-size: 0.9rem;
+}
+
+main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+#chart-panel {
+  grid-column: 1 / -1;
+}
+
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+}
+
+input, select, textarea, button {
+  font: inherit;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+}
+
+button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 0.6rem;
+  font-weight: 600;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.error {
+  color: var(--danger);
+  font-size: 0.85rem;
+}
+
+#workout-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+.workout-item {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  cursor: pointer;
+}
+
+.workout-item:hover {
+  border-color: var(--accent);
+}
+
+.workout-item.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.workout-item .category {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.workout-item .meta {
+  font-size: 0.8rem;
+  color: #8a8f98;
+}
+
+.window-control {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+  max-width: 320px;
+}
+
+.window-control input {
+  width: 5rem;
+}
+
+#chart-placeholder {
+  color: #8a8f98;
+}
