@@ -1,0 +1,23 @@
+name: Sync develop to main
+
+on:
+  push:
+    branches: [develop]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Open or update PR into main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create --base main --head develop \
+            --title "Sync develop -> main" \
+            --body "Auto-generated: merge to deploy to production." \
+            || echo "PR already open for develop -> main, nothing to do"
