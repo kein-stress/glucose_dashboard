@@ -1,0 +1,25 @@
+# Staging counterpart of glucose-dashboard.service: runs the `develop`
+# branch from a separate checkout, on a different port (set PORT in that
+# checkout's .env), so it doesn't collide with the production instance.
+#
+# Install (as systemd --user unit, no root required):
+#   git clone -b develop <repo> ~/projects/glucose-workout-dashboard-staging
+#   cd ~/projects/glucose-workout-dashboard-staging && npm ci --omit=dev
+#   cp .env.example .env   # set PORT to something other than prod, e.g. 3001
+#   cp deploy/glucose-dashboard-staging.service ~/.config/systemd/user/
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now glucose-dashboard-staging
+
+[Unit]
+Description=Glucose Workout Dashboard (staging)
+
+[Service]
+Type=simple
+WorkingDirectory=/home/deploy/glucose_dashboard-staging
+EnvironmentFile=/home/deploy/glucose_dashboard-staging/.env
+ExecStart=/usr/bin/node server/index.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

@@ -1,8 +1,8 @@
-name: Deploy
+name: Deploy staging
 
 on:
   push:
-    branches: [main]
+    branches: [develop]
 
 jobs:
   deploy:
@@ -17,7 +17,7 @@ jobs:
           port: ${{ secrets.VPS_PORT }}
           script: |
             export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"
-            cd ${{ secrets.VPS_APP_PATH }}
+            cd ${{ secrets.VPS_STAGING_APP_PATH }}
             git pull --ff-only
             npm ci --omit=dev
-            systemctl --user restart glucose-dashboard
+            systemctl --user restart glucose-dashboard-staging
