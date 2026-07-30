@@ -4,9 +4,11 @@ import { WorkoutForm } from './components/WorkoutForm.jsx';
 import { WorkoutList } from './components/WorkoutList.jsx';
 import { GlucoseChart } from './components/GlucoseChart.jsx';
 import { LanguageSwitcher } from './components/LanguageSwitcher.jsx';
+import { LoginForm } from './components/LoginForm.jsx';
 import { glucoseUnitLabel } from './lib/format.js';
 import { DEFAULT_GLUCOSE_UNIT_BY_LOCALE } from './i18n/translations.js';
 import { useI18n } from './i18n/I18nContext.jsx';
+import { useAuth } from './auth/AuthContext.jsx';
 
 const GLUCOSE_UNIT_STORAGE_KEY = 'glucoseUnit';
 
@@ -16,6 +18,25 @@ function defaultUnitForLocale(locale) {
 
 export function App() {
   const { t, locale, setLocale, supportedLocales, localeLabels, localeFlags } = useI18n();
+  const { authenticated, logout } = useAuth();
+  return authenticated ? (
+    <Dashboard
+      t={t}
+      locale={locale}
+      setLocale={setLocale}
+      supportedLocales={supportedLocales}
+      localeLabels={localeLabels}
+      localeFlags={localeFlags}
+      onLogout={logout}
+    />
+  ) : authenticated === false ? (
+    <LoginForm />
+  ) : (
+    <p id="app-loading">{t('app.loading')}</p>
+  );
+}
+
+function Dashboard({ t, locale, setLocale, supportedLocales, localeLabels, localeFlags, onLogout }) {
   const { workouts, addWorkout, removeWorkout } = useWorkouts();
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
   const [windowHours, setWindowHours] = useState(2);
@@ -51,6 +72,9 @@ export function App() {
   return (
     <>
       <header>
+        <button type="button" className="logout-button" onClick={onLogout}>
+          {t('app.logout')}
+        </button>
         <h1>{t('app.title')}</h1>
         <p className="subtitle">{t('app.subtitle')}</p>
         <LanguageSwitcher
