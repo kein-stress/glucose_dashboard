@@ -3,21 +3,36 @@ import { useWorkouts } from './hooks/useWorkouts.js';
 import { WorkoutForm } from './components/WorkoutForm.jsx';
 import { WorkoutList } from './components/WorkoutList.jsx';
 import { GlucoseChart } from './components/GlucoseChart.jsx';
-import { GLUCOSE_UNIT_LABELS } from './lib/format.js';
+import { glucoseUnitLabel } from './lib/format.js';
+import { DEFAULT_GLUCOSE_UNIT_BY_LOCALE } from './i18n/translations.js';
+import { useI18n } from './i18n/I18nContext.jsx';
 
 const GLUCOSE_UNIT_STORAGE_KEY = 'glucoseUnit';
 
+function defaultUnitForLocale(locale) {
+  return DEFAULT_GLUCOSE_UNIT_BY_LOCALE[locale] || 'mgdl';
+}
+
 export function App() {
+  const { t, locale, setLocale, supportedLocales, localeLabels } = useI18n();
   const { workouts, addWorkout } = useWorkouts();
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
   const [windowHours, setWindowHours] = useState(2);
   const [glucoseUnit, setGlucoseUnit] = useState(
-    () => localStorage.getItem(GLUCOSE_UNIT_STORAGE_KEY) || 'mgdl'
+    () => localStorage.getItem(GLUCOSE_UNIT_STORAGE_KEY) || defaultUnitForLocale(locale)
   );
 
   function handleGlucoseUnitChange(unit) {
     setGlucoseUnit(unit);
     localStorage.setItem(GLUCOSE_UNIT_STORAGE_KEY, unit);
+  }
+
+  function handleLocaleChange(nextLocale) {
+    setLocale(nextLocale);
+    // Only follow the locale's default unit if the user never picked one explicitly.
+    if (!localStorage.getItem(GLUCOSE_UNIT_STORAGE_KEY)) {
+      setGlucoseUnit(defaultUnitForLocale(nextLocale));
+    }
   }
 
   async function handleCreate(payload) {
@@ -28,17 +43,27 @@ export function App() {
   return (
     <>
       <header>
-        <h1>Glucose × Workout Dashboard</h1>
-        <p className="subtitle">Наблюдательный дашборд. Не источник рекомендаций по дозировке.</p>
+        <h1>{t('app.title')}</h1>
+        <p className="subtitle">{t('app.subtitle')}</p>
         <label className="unit-control">
-          Единицы глюкозы:
+          {t('app.languageLabel')}
+          <select value={locale} onChange={(e) => handleLocaleChange(e.target.value)}>
+            {supportedLocales.map((code) => (
+              <option key={code} value={code}>
+                {localeLabels[code]}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="unit-control">
+          {t('app.unitLabel')}
           <select
             value={glucoseUnit}
             onChange={(e) => handleGlucoseUnitChange(e.target.value)}
           >
-            {Object.entries(GLUCOSE_UNIT_LABELS).map(([value, label]) => (
+            {['mgdl', 'mmol'].map((value) => (
               <option key={value} value={value}>
-                {label}
+                {glucoseUnitLabel(value, locale)}
               </option>
             ))}
           </select>
@@ -47,12 +72,12 @@ export function App() {
 
       <main>
         <section className="panel" id="form-panel">
-          <h2>Новая тренировка</h2>
+          <h2>{t('form.title')}</h2>
           <WorkoutForm onCreate={handleCreate} />
         </section>
 
         <section className="panel" id="list-panel">
-          <h2>Тренировки</h2>
+          <h2>{t('list.title')}</h2>
           <WorkoutList
             workouts={workouts}
             selectedWorkoutId={selectedWorkoutId}
@@ -61,7 +86,7 @@ export function App() {
         </section>
 
         <section className="panel" id="chart-panel">
-          <h2>Глюкоза вокруг тренировки</h2>
+          <h2>{t('chart.title')}</h2>
           <GlucoseChart
             workoutId={selectedWorkoutId}
             windowHours={windowHours}
