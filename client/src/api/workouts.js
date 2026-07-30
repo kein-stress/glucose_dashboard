@@ -1,3 +1,9 @@
+function apiError(body, fallbackMessage) {
+  const err = new Error(body.error || fallbackMessage);
+  err.code = body.code;
+  return err;
+}
+
 export async function fetchWorkouts() {
   const res = await fetch('/api/workouts');
   return res.json();
@@ -12,7 +18,7 @@ export async function createWorkout(payload) {
 
   const body = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error(body.error || 'Ошибка сохранения');
+    throw apiError(body, 'Ошибка сохранения');
   }
   return body;
 }
@@ -21,7 +27,7 @@ export async function deleteWorkout(workoutId) {
   const res = await fetch(`/api/workouts/${workoutId}`, { method: 'DELETE' });
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
-    throw new Error(body.error || 'Ошибка удаления');
+    throw apiError(body, 'Ошибка удаления');
   }
 }
 
@@ -29,7 +35,7 @@ export async function fetchGlucoseForWorkout(workoutId, windowHours) {
   const res = await fetch(`/api/workouts/${workoutId}/glucose?window=${windowHours}`);
   const body = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error(body.error || 'Не удалось загрузить данные глюкозы');
+    throw apiError(body, 'Не удалось загрузить данные глюкозы');
   }
   return body;
 }

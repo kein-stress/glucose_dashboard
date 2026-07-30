@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { buildWorkoutPayload } from '../api/workouts.js';
 import { useI18n } from '../i18n/I18nContext.jsx';
+import { localizeApiError } from '../lib/apiError.js';
 
 const initialFields = {
   category: 'strength',
@@ -27,7 +28,7 @@ export function WorkoutForm({ onCreate }) {
       await onCreate(buildWorkoutPayload(fields));
       setFields(initialFields);
     } catch (err) {
-      setError(err.message);
+      setError(localizeApiError(t, err));
     }
   }
 
