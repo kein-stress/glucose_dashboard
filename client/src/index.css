@@ -166,10 +166,32 @@ button:hover {
 }
 
 .workout-item {
+  position: relative;
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0.6rem 0.8rem;
   cursor: pointer;
+}
+
+.workout-item-delete {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  line-height: 1;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #8a8f98;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.workout-item-delete:hover {
+  background: var(--danger);
+  color: #fff;
 }
 
 .workout-item:hover {

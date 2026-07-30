@@ -56,6 +56,14 @@ router.get('/:id', (req, res) => {
   res.json(serializeWorkout(row));
 });
 
+router.delete('/:id', (req, res) => {
+  const row = db.prepare('SELECT * FROM workouts WHERE id = ?').get(req.params.id);
+  if (!row) return res.status(404).json({ error: 'Тренировка не найдена' });
+
+  db.prepare('DELETE FROM workouts WHERE id = ?').run(req.params.id);
+  res.status(204).end();
+});
+
 router.get('/:id/glucose', async (req, res) => {
   const row = db.prepare('SELECT * FROM workouts WHERE id = ?').get(req.params.id);
   if (!row) return res.status(404).json({ error: 'Тренировка не найдена' });
