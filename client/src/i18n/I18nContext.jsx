@@ -23,7 +23,7 @@ export function I18nProvider({ children }) {
     () => ({
       locale,
       setLocale,
-      t: (key, vars) => translate(locale, key, vars),
+      t: (key, vars, fallback) => translate(locale, key, vars, fallback),
       supportedLocales: SUPPORTED_LOCALES,
       localeLabels: LOCALE_LABELS,
       localeFlags: LOCALE_FLAGS,

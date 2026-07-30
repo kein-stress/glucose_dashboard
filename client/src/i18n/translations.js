@@ -1,5 +1,7 @@
 export const SUPPORTED_LOCALES = ['ru', 'en', 'es', 'de', 'fr'];
 
+export const CATEGORY_ORDER = ['strength', 'cardio', 'mobility', 'other'];
+
 export const LOCALE_LABELS = {
   ru: 'Русский',
   en: 'English',
@@ -57,6 +59,13 @@ const translations = {
     'chart.loading': 'Загрузка…',
     'chart.datasetLabel': 'Глюкоза ({{unit}})',
     'chart.timeAxis': 'Время',
+    'error.VALIDATION_CATEGORY': 'Категория должна быть одной из: {{categories}}',
+    'error.VALIDATION_START_TIME': 'Начало обязательно и должно быть валидной датой',
+    'error.VALIDATION_END_TIME': 'Конец обязателен и должен быть валидной датой',
+    'error.VALIDATION_TIME_ORDER': 'Время окончания не может быть раньше времени начала',
+    'error.WORKOUT_NOT_FOUND': 'Тренировка не найдена',
+    'error.VALIDATION_WINDOW': 'Окно должно быть числом от 0 до 24',
+    'error.NIGHTSCOUT_UNAVAILABLE': 'Не удалось получить данные из Nightscout',
   },
   en: {
     'app.title': 'Glucose × Workout Dashboard',
@@ -85,6 +94,13 @@ const translations = {
     'chart.loading': 'Loading…',
     'chart.datasetLabel': 'Glucose ({{unit}})',
     'chart.timeAxis': 'Time',
+    'error.VALIDATION_CATEGORY': 'Category must be one of: {{categories}}',
+    'error.VALIDATION_START_TIME': 'Start time is required and must be a valid date',
+    'error.VALIDATION_END_TIME': 'End time is required and must be a valid date',
+    'error.VALIDATION_TIME_ORDER': 'End time cannot be before start time',
+    'error.WORKOUT_NOT_FOUND': 'Workout not found',
+    'error.VALIDATION_WINDOW': 'Window must be a number between 0 and 24',
+    'error.NIGHTSCOUT_UNAVAILABLE': 'Could not fetch data from Nightscout',
   },
   es: {
     'app.title': 'Glucose × Workout Dashboard',
@@ -113,6 +129,13 @@ const translations = {
     'chart.loading': 'Cargando…',
     'chart.datasetLabel': 'Glucosa ({{unit}})',
     'chart.timeAxis': 'Tiempo',
+    'error.VALIDATION_CATEGORY': 'La categoría debe ser una de: {{categories}}',
+    'error.VALIDATION_START_TIME': 'La hora de inicio es obligatoria y debe ser una fecha válida',
+    'error.VALIDATION_END_TIME': 'La hora de fin es obligatoria y debe ser una fecha válida',
+    'error.VALIDATION_TIME_ORDER': 'La hora de fin no puede ser anterior a la hora de inicio',
+    'error.WORKOUT_NOT_FOUND': 'Entrenamiento no encontrado',
+    'error.VALIDATION_WINDOW': 'La ventana debe ser un número entre 0 y 24',
+    'error.NIGHTSCOUT_UNAVAILABLE': 'No se pudieron obtener los datos de Nightscout',
   },
   de: {
     'app.title': 'Glucose × Workout Dashboard',
@@ -141,6 +164,13 @@ const translations = {
     'chart.loading': 'Lädt…',
     'chart.datasetLabel': 'Glukose ({{unit}})',
     'chart.timeAxis': 'Zeit',
+    'error.VALIDATION_CATEGORY': 'Kategorie muss eine der folgenden sein: {{categories}}',
+    'error.VALIDATION_START_TIME': 'Startzeit ist erforderlich und muss ein gültiges Datum sein',
+    'error.VALIDATION_END_TIME': 'Endzeit ist erforderlich und muss ein gültiges Datum sein',
+    'error.VALIDATION_TIME_ORDER': 'Die Endzeit darf nicht vor der Startzeit liegen',
+    'error.WORKOUT_NOT_FOUND': 'Training nicht gefunden',
+    'error.VALIDATION_WINDOW': 'Das Fenster muss eine Zahl zwischen 0 und 24 sein',
+    'error.NIGHTSCOUT_UNAVAILABLE': 'Daten von Nightscout konnten nicht abgerufen werden',
   },
   fr: {
     'app.title': 'Glucose × Workout Dashboard',
@@ -169,12 +199,19 @@ const translations = {
     'chart.loading': 'Chargement…',
     'chart.datasetLabel': 'Glucose ({{unit}})',
     'chart.timeAxis': 'Temps',
+    'error.VALIDATION_CATEGORY': "La catégorie doit être l'une des suivantes : {{categories}}",
+    'error.VALIDATION_START_TIME': 'L\'heure de début est requise et doit être une date valide',
+    'error.VALIDATION_END_TIME': "L'heure de fin est requise et doit être une date valide",
+    'error.VALIDATION_TIME_ORDER': "L'heure de fin ne peut pas être antérieure à l'heure de début",
+    'error.WORKOUT_NOT_FOUND': 'Séance introuvable',
+    'error.VALIDATION_WINDOW': 'La fenêtre doit être un nombre entre 0 et 24',
+    'error.NIGHTSCOUT_UNAVAILABLE': 'Impossible de récupérer les données depuis Nightscout',
   },
 };
 
-export function translate(locale, key, vars) {
+export function translate(locale, key, vars, fallback) {
   const dict = translations[locale] || translations.en;
-  let str = dict[key] ?? translations.en[key] ?? key;
+  let str = dict[key] ?? translations.en[key] ?? fallback ?? key;
   if (vars) {
     for (const [name, value] of Object.entries(vars)) {
       str = str.replaceAll(`{{${name}}}`, value);

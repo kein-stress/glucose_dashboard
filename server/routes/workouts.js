@@ -14,16 +14,28 @@ router.post('/', (req, res) => {
   const { category, start_time, end_time, tags, intensity, notes, source } = req.body || {};
 
   if (!category || !CATEGORIES.has(category)) {
-    return res.status(400).json({ error: `category должна быть одной из: ${[...CATEGORIES].join(', ')}` });
+    return res.status(400).json({
+      error: `category должна быть одной из: ${[...CATEGORIES].join(', ')}`,
+      code: 'VALIDATION_CATEGORY',
+    });
   }
   if (!start_time || Number.isNaN(Date.parse(start_time))) {
-    return res.status(400).json({ error: 'start_time обязателен и должен быть валидной датой (ISO 8601)' });
+    return res.status(400).json({
+      error: 'start_time обязателен и должен быть валидной датой (ISO 8601)',
+      code: 'VALIDATION_START_TIME',
+    });
   }
   if (!end_time || Number.isNaN(Date.parse(end_time))) {
-    return res.status(400).json({ error: 'end_time обязателен и должен быть валидной датой (ISO 8601)' });
+    return res.status(400).json({
+      error: 'end_time обязателен и должен быть валидной датой (ISO 8601)',
+      code: 'VALIDATION_END_TIME',
+    });
   }
   if (Date.parse(end_time) < Date.parse(start_time)) {
-    return res.status(400).json({ error: 'end_time не может быть раньше start_time' });
+    return res.status(400).json({
+      error: 'end_time не может быть раньше start_time',
+      code: 'VALIDATION_TIME_ORDER',
+    });
   }
 
   const stmt = db.prepare(`
@@ -52,13 +64,13 @@ router.get('/', (_req, res) => {
 
 router.get('/:id', (req, res) => {
   const row = db.prepare('SELECT * FROM workouts WHERE id = ?').get(req.params.id);
-  if (!row) return res.status(404).json({ error: 'Тренировка не найдена' });
+  if (!row) return res.status(404).json({ error: 'Тренировка не найдена', code: 'WORKOUT_NOT_FOUND' });
   res.json(serializeWorkout(row));
 });
 
 router.delete('/:id', (req, res) => {
   const row = db.prepare('SELECT * FROM workouts WHERE id = ?').get(req.params.id);
-  if (!row) return res.status(404).json({ error: 'Тренировка не найдена' });
+  if (!row) return res.status(404).json({ error: 'Тренировка не найдена', code: 'WORKOUT_NOT_FOUND' });
 
   db.prepare('DELETE FROM workouts WHERE id = ?').run(req.params.id);
   res.status(204).end();
@@ -66,9 +78,12 @@ router.delete('/:id', (req, res) => {
 
 router.get('/:id/glucose', async (req, res) => {
   const row = db.prepare('SELECT * FROM workouts WHERE id = ?').get(req.params.id);
-  if (!row) return res.status(404).json({ error: 'Тренировка не найдена' });
+  if (!row) return res.status(404).json({ error: 'Тренировка не найдена', code: 'WORKOUT_NOT_FOUND' });
 
-  const windowHours = Number(req.query.window ?? 2);
+  const windowHours = req.query.window === undefined ? 2 : Number(req.query.window);
+  if (!Number.isFinite(windowHours) || windowHours < 0 || windowHours > 24) {
+    return res.status(400).json({ error: 'window должен быть числом от 0 до 24', code: 'VALIDATION_WINDOW' });
+  }
   const windowMs = windowHours * 60 * 60 * 1000;
 
   const fromMs = new Date(row.start_time).getTime() - windowMs;
@@ -82,7 +97,8 @@ router.get('/:id/glucose', async (req, res) => {
       entries,
     });
   } catch (err) {
-    res.status(502).json({ error: err.message });
+    console.error('Nightscout request failed:', err);
+    res.status(502).json({ error: 'Не удалось получить данные из Nightscout', code: 'NIGHTSCOUT_UNAVAILABLE' });
   }
 });
 

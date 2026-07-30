@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { createWorkout, deleteWorkout, fetchWorkouts } from '../api/workouts.js';
+import { useI18n } from '../i18n/I18nContext.jsx';
+import { localizeApiError } from '../lib/apiError.js';
 
 export function useWorkouts() {
+  const { t } = useI18n();
   const [workouts, setWorkouts] = useState([]);
   const [error, setError] = useState(null);
 
@@ -11,9 +14,9 @@ export function useWorkouts() {
       setWorkouts(data);
       setError(null);
     } catch (err) {
-      setError(err.message);
+      setError(localizeApiError(t, err));
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     reload();
