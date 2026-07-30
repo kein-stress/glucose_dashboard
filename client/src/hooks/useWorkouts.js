@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { createWorkout, fetchWorkouts } from '../api/workouts.js';
+import { createWorkout, deleteWorkout, fetchWorkouts } from '../api/workouts.js';
 
 export function useWorkouts() {
   const [workouts, setWorkouts] = useState([]);
@@ -28,5 +28,13 @@ export function useWorkouts() {
     [reload],
   );
 
-  return { workouts, error, reload, addWorkout };
+  const removeWorkout = useCallback(
+    async (id) => {
+      await deleteWorkout(id);
+      await reload();
+    },
+    [reload],
+  );
+
+  return { workouts, error, reload, addWorkout, removeWorkout };
 }

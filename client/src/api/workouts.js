@@ -17,6 +17,14 @@ export async function createWorkout(payload) {
   return body;
 }
 
+export async function deleteWorkout(workoutId) {
+  const res = await fetch(`/api/workouts/${workoutId}`, { method: 'DELETE' });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || 'Ошибка удаления');
+  }
+}
+
 export async function fetchGlucoseForWorkout(workoutId, windowHours) {
   const res = await fetch(`/api/workouts/${workoutId}/glucose?window=${windowHours}`);
   const body = await res.json().catch(() => ({}));

@@ -80,6 +80,29 @@ test('GET /api/workouts/:id returns 404 for an unknown id', async () => {
   });
 });
 
+test('DELETE /api/workouts/:id removes the workout', async () => {
+  await withServer(async (base) => {
+    const created = await fetch(`${base}/api/workouts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(validWorkoutPayload()),
+    }).then((r) => r.json());
+
+    const res = await fetch(`${base}/api/workouts/${created.id}`, { method: 'DELETE' });
+    assert.equal(res.status, 204);
+
+    const fetched = await fetch(`${base}/api/workouts/${created.id}`);
+    assert.equal(fetched.status, 404);
+  });
+});
+
+test('DELETE /api/workouts/:id returns 404 for an unknown id', async () => {
+  await withServer(async (base) => {
+    const res = await fetch(`${base}/api/workouts/999999`, { method: 'DELETE' });
+    assert.equal(res.status, 404);
+  });
+});
+
 test('GET /api/workouts/:id/glucose merges nightscout entries around the workout window', async (t) => {
   await withServer(async (base) => {
     const created = await fetch(`${base}/api/workouts`, {

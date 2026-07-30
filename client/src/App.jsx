@@ -16,7 +16,7 @@ function defaultUnitForLocale(locale) {
 
 export function App() {
   const { t, locale, setLocale, supportedLocales, localeLabels, localeFlags } = useI18n();
-  const { workouts, addWorkout } = useWorkouts();
+  const { workouts, addWorkout, removeWorkout } = useWorkouts();
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
   const [windowHours, setWindowHours] = useState(2);
   const [glucoseUnit, setGlucoseUnit] = useState(
@@ -39,6 +39,13 @@ export function App() {
   async function handleCreate(payload) {
     const created = await addWorkout(payload);
     setSelectedWorkoutId(created.id);
+  }
+
+  async function handleDelete(id) {
+    await removeWorkout(id);
+    if (id === selectedWorkoutId) {
+      setSelectedWorkoutId(null);
+    }
   }
 
   return (
@@ -80,6 +87,7 @@ export function App() {
             workouts={workouts}
             selectedWorkoutId={selectedWorkoutId}
             onSelect={setSelectedWorkoutId}
+            onDelete={handleDelete}
           />
         </section>
 
