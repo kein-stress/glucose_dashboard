@@ -1,6 +1,6 @@
 const express = require('express');
 const db = require('../db');
-const { getEntriesInRange } = require('../nightscout');
+const nightscout = require('../nightscout');
 
 const router = express.Router();
 
@@ -67,7 +67,7 @@ router.get('/:id/glucose', async (req, res) => {
   const toMs = new Date(row.end_time).getTime() + windowMs;
 
   try {
-    const entries = await getEntriesInRange(fromMs, toMs);
+    const entries = await nightscout.getEntriesInRange(fromMs, toMs);
     res.json({
       workout: serializeWorkout(row),
       window_hours: windowHours,
