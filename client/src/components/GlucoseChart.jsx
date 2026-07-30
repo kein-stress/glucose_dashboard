@@ -42,43 +42,45 @@ export function GlucoseChart({ workoutId, windowHours, onWindowHoursChange }) {
       {placeholder ? (
         <p id="chart-placeholder">{placeholder}</p>
       ) : (
-        <Line
-          height={120}
-          data={{
-            datasets: [
-              {
-                label: 'Глюкоза (mg/dL)',
-                data: data.entries.map((e) => ({ x: e.date, y: e.sgv })),
-                borderColor: '#3568d4',
-                backgroundColor: 'rgba(53, 104, 212, 0.1)',
-                pointRadius: 2,
-                tension: 0.2,
+        <div className="chart-wrap">
+          <Line
+            data={{
+              datasets: [
+                {
+                  label: 'Глюкоза (mg/dL)',
+                  data: data.entries.map((e) => ({ x: e.date, y: e.sgv })),
+                  borderColor: '#3568d4',
+                  backgroundColor: 'rgba(53, 104, 212, 0.1)',
+                  pointRadius: 2,
+                  tension: 0.2,
+                },
+              ],
+            }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x: {
+                  type: 'time',
+                  time: { unit: 'hour', tooltipFormat: 'dd.MM HH:mm' },
+                  title: { display: true, text: 'Время' },
+                },
+                y: {
+                  title: { display: true, text: 'mg/dL' },
+                  suggestedMin: 60,
+                  suggestedMax: 200,
+                },
               },
-            ],
-          }}
-          options={{
-            responsive: true,
-            scales: {
-              x: {
-                type: 'time',
-                time: { unit: 'hour', tooltipFormat: 'dd.MM HH:mm' },
-                title: { display: true, text: 'Время' },
+              plugins: {
+                workoutRange: {
+                  start: new Date(data.workout.start_time).getTime(),
+                  end: new Date(data.workout.end_time).getTime(),
+                },
               },
-              y: {
-                title: { display: true, text: 'mg/dL' },
-                suggestedMin: 60,
-                suggestedMax: 200,
-              },
-            },
-            plugins: {
-              workoutRange: {
-                start: new Date(data.workout.start_time).getTime(),
-                end: new Date(data.workout.end_time).getTime(),
-              },
-            },
-          }}
-          plugins={[workoutRangePlugin]}
-        />
+            }}
+            plugins={[workoutRangePlugin]}
+          />
+        </div>
       )}
     </>
   );
