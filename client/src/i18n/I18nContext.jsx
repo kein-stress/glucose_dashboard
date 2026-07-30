@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { SUPPORTED_LOCALES, LOCALE_LABELS, detectLocale, translate } from './translations.js';
+import { SUPPORTED_LOCALES, LOCALE_LABELS, LOCALE_FLAGS, detectLocale, translate } from './translations.js';
 
 const LOCALE_STORAGE_KEY = 'locale';
 
@@ -26,6 +26,7 @@ export function I18nProvider({ children }) {
       t: (key, vars) => translate(locale, key, vars),
       supportedLocales: SUPPORTED_LOCALES,
       localeLabels: LOCALE_LABELS,
+      localeFlags: LOCALE_FLAGS,
     }),
     [locale]
   );

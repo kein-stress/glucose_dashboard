@@ -8,6 +8,14 @@ export const LOCALE_LABELS = {
   fr: 'Français',
 };
 
+export const LOCALE_FLAGS = {
+  ru: '🇷🇺',
+  en: '🇬🇧',
+  es: '🇪🇸',
+  de: '🇩🇪',
+  fr: '🇫🇷',
+};
+
 // Used for Date#toLocaleString and for the default glucose unit.
 export const LOCALE_INTL_TAG = {
   ru: 'ru-RU',
@@ -25,7 +33,6 @@ const translations = {
   ru: {
     'app.title': 'Glucose × Workout Dashboard',
     'app.subtitle': 'Наблюдательный дашборд. Не источник рекомендаций по дозировке.',
-    'app.languageLabel': 'Язык:',
     'app.unitLabel': 'Единицы глюкозы:',
     'form.title': 'Новая тренировка',
     'form.category': 'Категория',
@@ -52,7 +59,6 @@ const translations = {
   en: {
     'app.title': 'Glucose × Workout Dashboard',
     'app.subtitle': 'An observational dashboard. Not a source of dosing recommendations.',
-    'app.languageLabel': 'Language:',
     'app.unitLabel': 'Glucose units:',
     'form.title': 'New workout',
     'form.category': 'Category',
@@ -79,7 +85,6 @@ const translations = {
   es: {
     'app.title': 'Glucose × Workout Dashboard',
     'app.subtitle': 'Panel observacional. No es una fuente de recomendaciones de dosificación.',
-    'app.languageLabel': 'Idioma:',
     'app.unitLabel': 'Unidades de glucosa:',
     'form.title': 'Nuevo entrenamiento',
     'form.category': 'Categoría',
@@ -106,7 +111,6 @@ const translations = {
   de: {
     'app.title': 'Glucose × Workout Dashboard',
     'app.subtitle': 'Beobachtendes Dashboard. Keine Grundlage für Dosierungsempfehlungen.',
-    'app.languageLabel': 'Sprache:',
     'app.unitLabel': 'Glukoseeinheiten:',
     'form.title': 'Neues Training',
     'form.category': 'Kategorie',
@@ -133,7 +137,6 @@ const translations = {
   fr: {
     'app.title': 'Glucose × Workout Dashboard',
     'app.subtitle': "Tableau de bord observationnel. Ne constitue pas une recommandation de dosage.",
-    'app.languageLabel': 'Langue :',
     'app.unitLabel': 'Unités de glucose :',
     'form.title': 'Nouvelle séance',
     'form.category': 'Catégorie',

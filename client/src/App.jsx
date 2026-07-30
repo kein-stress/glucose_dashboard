@@ -3,6 +3,7 @@ import { useWorkouts } from './hooks/useWorkouts.js';
 import { WorkoutForm } from './components/WorkoutForm.jsx';
 import { WorkoutList } from './components/WorkoutList.jsx';
 import { GlucoseChart } from './components/GlucoseChart.jsx';
+import { LanguageSwitcher } from './components/LanguageSwitcher.jsx';
 import { glucoseUnitLabel } from './lib/format.js';
 import { DEFAULT_GLUCOSE_UNIT_BY_LOCALE } from './i18n/translations.js';
 import { useI18n } from './i18n/I18nContext.jsx';
@@ -14,7 +15,7 @@ function defaultUnitForLocale(locale) {
 }
 
 export function App() {
-  const { t, locale, setLocale, supportedLocales, localeLabels } = useI18n();
+  const { t, locale, setLocale, supportedLocales, localeLabels, localeFlags } = useI18n();
   const { workouts, addWorkout } = useWorkouts();
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
   const [windowHours, setWindowHours] = useState(2);
@@ -45,16 +46,13 @@ export function App() {
       <header>
         <h1>{t('app.title')}</h1>
         <p className="subtitle">{t('app.subtitle')}</p>
-        <label className="unit-control">
-          {t('app.languageLabel')}
-          <select value={locale} onChange={(e) => handleLocaleChange(e.target.value)}>
-            {supportedLocales.map((code) => (
-              <option key={code} value={code}>
-                {localeLabels[code]}
-              </option>
-            ))}
-          </select>
-        </label>
+        <LanguageSwitcher
+          locale={locale}
+          locales={supportedLocales}
+          labels={localeLabels}
+          flags={localeFlags}
+          onChange={handleLocaleChange}
+        />
         <label className="unit-control">
           {t('app.unitLabel')}
           <select
