@@ -2,11 +2,16 @@ const path = require('node:path');
 const fs = require('node:fs');
 const { DatabaseSync } = require('node:sqlite');
 
-const dataDir = path.join(__dirname, '..', 'data');
-fs.mkdirSync(dataDir, { recursive: true });
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, '..', 'data', 'workouts.sqlite');
 
-const db = new DatabaseSync(path.join(dataDir, 'workouts.sqlite'));
-db.exec('PRAGMA journal_mode = WAL');
+if (DB_PATH !== ':memory:') {
+  fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
+}
+
+const db = new DatabaseSync(DB_PATH);
+if (DB_PATH !== ':memory:') {
+  db.exec('PRAGMA journal_mode = WAL');
+}
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS workouts (
