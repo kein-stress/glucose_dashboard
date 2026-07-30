@@ -3,11 +3,22 @@ import { useWorkouts } from './hooks/useWorkouts.js';
 import { WorkoutForm } from './components/WorkoutForm.jsx';
 import { WorkoutList } from './components/WorkoutList.jsx';
 import { GlucoseChart } from './components/GlucoseChart.jsx';
+import { GLUCOSE_UNIT_LABELS } from './lib/format.js';
+
+const GLUCOSE_UNIT_STORAGE_KEY = 'glucoseUnit';
 
 export function App() {
   const { workouts, addWorkout } = useWorkouts();
   const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
   const [windowHours, setWindowHours] = useState(2);
+  const [glucoseUnit, setGlucoseUnit] = useState(
+    () => localStorage.getItem(GLUCOSE_UNIT_STORAGE_KEY) || 'mgdl'
+  );
+
+  function handleGlucoseUnitChange(unit) {
+    setGlucoseUnit(unit);
+    localStorage.setItem(GLUCOSE_UNIT_STORAGE_KEY, unit);
+  }
 
   async function handleCreate(payload) {
     const created = await addWorkout(payload);
@@ -19,6 +30,19 @@ export function App() {
       <header>
         <h1>Glucose × Workout Dashboard</h1>
         <p className="subtitle">Наблюдательный дашборд. Не источник рекомендаций по дозировке.</p>
+        <label className="unit-control">
+          Единицы глюкозы:
+          <select
+            value={glucoseUnit}
+            onChange={(e) => handleGlucoseUnitChange(e.target.value)}
+          >
+            {Object.entries(GLUCOSE_UNIT_LABELS).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </label>
       </header>
 
       <main>
@@ -42,6 +66,7 @@ export function App() {
             workoutId={selectedWorkoutId}
             windowHours={windowHours}
             onWindowHoursChange={setWindowHours}
+            unit={glucoseUnit}
           />
         </section>
       </main>

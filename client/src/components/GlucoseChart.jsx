@@ -1,5 +1,8 @@
 import { Line } from 'react-chartjs-2';
 import { useGlucoseData } from '../hooks/useGlucoseData.js';
+import { convertGlucose, GLUCOSE_UNIT_LABELS } from '../lib/format.js';
+
+const SUGGESTED_RANGE_MGDL = { min: 60, max: 200 };
 
 const workoutRangePlugin = {
   id: 'workoutRange',
@@ -17,8 +20,9 @@ const workoutRangePlugin = {
   },
 };
 
-export function GlucoseChart({ workoutId, windowHours, onWindowHoursChange }) {
+export function GlucoseChart({ workoutId, windowHours, onWindowHoursChange, unit }) {
   const { data, error } = useGlucoseData(workoutId, windowHours);
+  const unitLabel = GLUCOSE_UNIT_LABELS[unit];
 
   let placeholder = null;
   if (workoutId == null) placeholder = 'Выбери тренировку из списка слева.';
@@ -47,8 +51,8 @@ export function GlucoseChart({ workoutId, windowHours, onWindowHoursChange }) {
             data={{
               datasets: [
                 {
-                  label: 'Глюкоза (mg/dL)',
-                  data: data.entries.map((e) => ({ x: e.date, y: e.sgv })),
+                  label: `Глюкоза (${unitLabel})`,
+                  data: data.entries.map((e) => ({ x: e.date, y: convertGlucose(e.sgv, unit) })),
                   borderColor: '#3568d4',
                   backgroundColor: 'rgba(53, 104, 212, 0.1)',
                   pointRadius: 2,
@@ -66,9 +70,9 @@ export function GlucoseChart({ workoutId, windowHours, onWindowHoursChange }) {
                   title: { display: true, text: 'Время' },
                 },
                 y: {
-                  title: { display: true, text: 'mg/dL' },
-                  suggestedMin: 60,
-                  suggestedMax: 200,
+                  title: { display: true, text: unitLabel },
+                  suggestedMin: convertGlucose(SUGGESTED_RANGE_MGDL.min, unit),
+                  suggestedMax: convertGlucose(SUGGESTED_RANGE_MGDL.max, unit),
                 },
               },
               plugins: {
