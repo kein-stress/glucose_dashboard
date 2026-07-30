@@ -20,4 +20,5 @@ jobs:
             cd ${{ secrets.VPS_STAGING_APP_PATH }}
             git pull --ff-only
             npm ci --omit=dev
+            npm run build
             systemctl --user restart glucose-dashboard-staging
