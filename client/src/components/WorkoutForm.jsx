@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { buildWorkoutPayload } from '../api/workouts.js';
+import { useI18n } from '../i18n/I18nContext.jsx';
 
 const initialFields = {
   category: 'strength',
@@ -11,6 +12,7 @@ const initialFields = {
 };
 
 export function WorkoutForm({ onCreate }) {
+  const { t } = useI18n();
   const [fields, setFields] = useState(initialFields);
   const [error, setError] = useState(null);
 
@@ -33,41 +35,41 @@ export function WorkoutForm({ onCreate }) {
     <>
       <form onSubmit={handleSubmit}>
         <label>
-          Категория
+          {t('form.category')}
           <select value={fields.category} onChange={update('category')} required>
-            <option value="strength">Силовая</option>
-            <option value="cardio">Кардио</option>
-            <option value="mobility">Мобильность/растяжка</option>
-            <option value="other">Другое</option>
+            <option value="strength">{t('category.strength')}</option>
+            <option value="cardio">{t('category.cardio')}</option>
+            <option value="mobility">{t('category.mobility')}</option>
+            <option value="other">{t('category.other')}</option>
           </select>
         </label>
 
         <label>
-          Начало
+          {t('form.start')}
           <input type="datetime-local" value={fields.start_time} onChange={update('start_time')} required />
         </label>
 
         <label>
-          Конец
+          {t('form.end')}
           <input type="datetime-local" value={fields.end_time} onChange={update('end_time')} required />
         </label>
 
         <label>
-          Интенсивность (1–10)
+          {t('form.intensity')}
           <input type="number" min="1" max="10" value={fields.intensity} onChange={update('intensity')} />
         </label>
 
         <label>
-          Теги (через запятую)
-          <input type="text" placeholder="ноги, база, зал" value={fields.tags} onChange={update('tags')} />
+          {t('form.tags')}
+          <input type="text" placeholder={t('form.tagsPlaceholder')} value={fields.tags} onChange={update('tags')} />
         </label>
 
         <label>
-          Заметки
+          {t('form.notes')}
           <textarea rows="2" value={fields.notes} onChange={update('notes')} />
         </label>
 
-        <button type="submit">Сохранить тренировку</button>
+        <button type="submit">{t('form.submit')}</button>
       </form>
       <p className="error" hidden={!error}>{error}</p>
     </>

@@ -1,16 +1,9 @@
-export const CATEGORY_LABELS = {
-  strength: 'Силовая',
-  cardio: 'Кардио',
-  mobility: 'Мобильность',
-  other: 'Другое',
-};
-
 const MGDL_PER_MMOL = 18.0182;
 
-export const GLUCOSE_UNIT_LABELS = {
-  mgdl: 'mg/dL',
-  mmol: 'ммоль/л',
-};
+export function glucoseUnitLabel(unit, locale) {
+  if (unit === 'mmol') return locale === 'ru' ? 'ммоль/л' : 'mmol/L';
+  return 'mg/dL';
+}
 
 // Nightscout всегда отдаёт sgv в mg/dL — конвертируем только для отображения.
 export function convertGlucose(mgdl, unit) {
@@ -30,7 +23,7 @@ export function fmtDateTimeLocal(iso) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-export function fmtDisplay(iso) {
+export function fmtDisplay(iso, intlTag = 'ru-RU') {
   const d = new Date(iso);
-  return d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleString(intlTag, { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
 }

@@ -1,6 +1,7 @@
 import { Line } from 'react-chartjs-2';
 import { useGlucoseData } from '../hooks/useGlucoseData.js';
-import { convertGlucose, GLUCOSE_UNIT_LABELS } from '../lib/format.js';
+import { convertGlucose, glucoseUnitLabel } from '../lib/format.js';
+import { useI18n } from '../i18n/I18nContext.jsx';
 
 const SUGGESTED_RANGE_MGDL = { min: 60, max: 200 };
 
@@ -21,18 +22,19 @@ const workoutRangePlugin = {
 };
 
 export function GlucoseChart({ workoutId, windowHours, onWindowHoursChange, unit }) {
+  const { t, locale } = useI18n();
   const { data, error } = useGlucoseData(workoutId, windowHours);
-  const unitLabel = GLUCOSE_UNIT_LABELS[unit];
+  const unitLabel = glucoseUnitLabel(unit, locale);
 
   let placeholder = null;
-  if (workoutId == null) placeholder = 'Выбери тренировку из списка слева.';
+  if (workoutId == null) placeholder = t('chart.selectWorkout');
   else if (error) placeholder = error;
-  else if (!data) placeholder = 'Загрузка…';
+  else if (!data) placeholder = t('chart.loading');
 
   return (
     <>
       <label className="window-control">
-        Окно вокруг тренировки, часы:
+        {t('chart.windowLabel')}
         <input
           type="number"
           min="0"
@@ -51,7 +53,7 @@ export function GlucoseChart({ workoutId, windowHours, onWindowHoursChange, unit
             data={{
               datasets: [
                 {
-                  label: `Глюкоза (${unitLabel})`,
+                  label: t('chart.datasetLabel', { unit: unitLabel }),
                   data: data.entries.map((e) => ({ x: e.date, y: convertGlucose(e.sgv, unit) })),
                   borderColor: '#3568d4',
                   backgroundColor: 'rgba(53, 104, 212, 0.1)',
@@ -67,7 +69,7 @@ export function GlucoseChart({ workoutId, windowHours, onWindowHoursChange, unit
                 x: {
                   type: 'time',
                   time: { unit: 'hour', tooltipFormat: 'dd.MM HH:mm' },
-                  title: { display: true, text: 'Время' },
+                  title: { display: true, text: t('chart.timeAxis') },
                 },
                 y: {
                   title: { display: true, text: unitLabel },
