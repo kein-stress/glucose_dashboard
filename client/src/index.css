@@ -42,6 +42,11 @@ main {
   grid-column: 1 / -1;
 }
 
+.chart-wrap {
+  position: relative;
+  height: 340px;
+}
+
 .panel {
   background: var(--bg-panel);
   border: 1px solid var(--border);
@@ -142,4 +147,44 @@ button:hover {
 
 #chart-placeholder {
   color: #8a8f98;
+}
+
+@media (max-width: 720px) {
+  body {
+    padding: 1rem;
+  }
+
+  header h1 {
+    font-size: 1.4rem;
+  }
+
+  main {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .panel {
+    padding: 1rem;
+  }
+
+  .window-control {
+    flex-wrap: wrap;
+    max-width: none;
+  }
+
+  .window-control input {
+    width: 100%;
+  }
+
+  #workout-list {
+    max-height: 320px;
+  }
+
+  .chart-wrap {
+    height: 280px;
+  }
+
+  input, select, textarea, button {
+    font-size: 16px;
+  }
 }
