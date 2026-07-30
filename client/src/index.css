@@ -32,6 +32,16 @@ header {
   font-size: 0.9rem;
 }
 
+.unit-control {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  max-width: 260px;
+}
+
 main {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -174,6 +184,10 @@ button:hover {
 
   .window-control input {
     width: 100%;
+  }
+
+  .unit-control {
+    max-width: none;
   }
 
   #workout-list {
