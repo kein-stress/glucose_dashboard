@@ -263,6 +263,13 @@ button:hover {
     padding: 1rem;
   }
 
+  .logout-button {
+    position: static;
+    display: block;
+    width: fit-content;
+    margin: 0 0 0.75rem auto;
+  }
+
   header h1 {
     font-size: 1.4rem;
   }
