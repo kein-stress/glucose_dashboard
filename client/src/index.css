@@ -24,7 +24,34 @@ body {
 }
 
 header {
+  position: relative;
   margin-bottom: 1.5rem;
+}
+
+.logout-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: transparent;
+  color: inherit;
+  border: 1px solid var(--border);
+  font-weight: 400;
+  padding: 0.4rem 0.7rem;
+}
+
+#app-loading {
+  color: #8a8f98;
+}
+
+.login-panel {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+.login-panel form {
+  width: 100%;
+  max-width: 320px;
 }
 
 .subtitle {

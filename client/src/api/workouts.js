@@ -1,12 +1,19 @@
+import { emitUnauthorized } from '../lib/authEvents.js';
+
 function apiError(body, fallbackMessage) {
   const err = new Error(body.error || fallbackMessage);
   err.code = body.code;
+  if (err.code === 'UNAUTHORIZED') emitUnauthorized();
   return err;
 }
 
 export async function fetchWorkouts() {
   const res = await fetch('/api/workouts');
-  return res.json();
+  const body = await res.json().catch(() => ([]));
+  if (!res.ok) {
+    throw apiError(body, 'Не удалось загрузить тренировки');
+  }
+  return body;
 }
 
 export async function createWorkout(payload) {
